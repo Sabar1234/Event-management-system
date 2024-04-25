@@ -8,6 +8,7 @@ const {
   userInfo,
   userEvents,
   getSingleEvent,
+  booknow,
 } = require("../controllers/events");
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router
   .get("/event/:eventId", isAuthenticated, getSingleEvent)
   .get("/user-events/:userId", isAuthenticated, userEvents)
   .put("/update-event/:eventId/:creatorEmail", isAuthenticated, updateEvent)
-  .delete("/delete-event/:eventId/:userId", isAuthenticated, deleteEvent);
+  .delete("/delete-event/:eventId/:userId", isAuthenticated, deleteEvent)
+  .post("/booknow/:eventId", isAuthenticated, booknow);
 
 module.exports = router;

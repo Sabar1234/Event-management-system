@@ -19,6 +19,7 @@ const Requests = (props) => {
 
   //approve event//
   const handleApprove = async (eventId) => {
+    console.log("Event Approved ID",eventId)
     try {
       const res = await axios.put(
         `http://localhost:2000/api/approve-event/${eventId}`
@@ -32,7 +33,7 @@ const Requests = (props) => {
   return (
     <div>
       <h2 className="text-2xl text-center text-black mt-5 font-bold">
-        All Events
+        All Event Requests
       </h2>
 
       <div className="flex flex-col items-center mt-6">
@@ -55,56 +56,72 @@ const Requests = (props) => {
             </>
           ) : (
             <>
-              {events.map((e) => {
-                return (
-                  <>
-                    {e.status === "PENDING" ? (
+              {events.length > 0 ? (
+                <>
+                  {events.map((e) => {
+                    return (
                       <>
-                        <div className="cursor-pointer parent mt-6">
-                          <div className="rounded-xl max-w-52 overflow-hidden ">
-                            <div className="flex flex-col">
-                              <div
-                                className="img "
-                                onClick={() => handleClick({ eventId: e._id })}
-                              >
-                                <img
-                                  className="h-80 w-full object-cover rounded-xl"
-                                  src={e.image}
-                                  alt=""
-                                />
-                              </div>
-                              <div className="content p-3">
-                                <div className="flex flex-col items-start">
-                                  <p className="text-xl font-bold">{e.title}</p>
-                                  <p className="text-gray-500 font-medium ">
-                                    {e.category}
-                                  </p>
+                        {e.status === "PENDING" ? (
+                          <>
+                            <div className="cursor-pointer  md:ms-52 parent mt-6">
+                              <div className="rounded-xl max-w-52 overflow-hidden ">
+                                <div className="flex flex-col">
+                                  <div
+                                    className="img "
+                                    onClick={() =>
+                                      handleClick({ eventId: e._id })
+                                    }
+                                  >
+                                    <img
+                                      className="h-80 w-full object-cover rounded-xl"
+                                      src={e.image}
+                                      alt=""
+                                    />
+                                  </div>
+                                  <div className="content p-3">
+                                    <div className="flex flex-col items-start">
+                                      <p className="text-xl font-bold">
+                                        {e.title}
+                                      </p>
+                                      <p className="text-gray-500 font-medium ">
+                                        {e.category}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex justify-around my-2">
+                                  <button
+                                    className="text-red-700 text-sm font-semibold px-2  hover:text-red-800 "
+                                    onClick={() => {
+                                      handleApprove(e._id);
+                                    }}
+                                  >
+                                    Approve
+                                  </button>
+                                  <button
+                                    onClick={() => {}}
+                                    className="text-white text-sm font-semibold  rounded-sm hover:bg-red-800 bg-red-700 px-1"
+                                  >
+                                    Cancel
+                                  </button>
                                 </div>
                               </div>
                             </div>
-                            <div className="flex justify-around my-2">
-                              <button
-                                className="text-red-700 text-sm font-semibold px-2  hover:text-red-800 "
-                                onClick={() => {
-                                  handleApprove(e._id);
-                                }}
-                              >
-                                Approve
-                              </button>
-                              <button
-                                onClick={() => {}}
-                                className="text-white text-sm font-semibold  rounded-sm hover:bg-red-800 bg-red-700 px-1"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                          </>
+                        ) : null}
                       </>
-                    ) : null}
-                  </>
-                );
-              })}
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                 <div className="container flex justify-center">
+                <p className="text-center text-3xl text-red-700 font-semibold">
+                 No Requests
+                </p>
+              </div>
+                </>
+              )}
             </>
           )}
         </div>

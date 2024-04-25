@@ -15,7 +15,10 @@ const MaybeNavbar = ({ children }) => {
       location.pathname === "/admin" ||
       location.pathname === "/admin/all-users" ||
       location.pathname === "/admin/all-events" ||
-      location.pathname === "/admin/requests"
+      location.pathname === "/admin/requests" ||
+      location.pathname === "/search-events" ||
+      location.pathname === "/admin-signup" ||
+      location.pathname === "/admin-login"
     ) {
       setShowNavbar(false);
     } else {

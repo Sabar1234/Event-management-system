@@ -1,6 +1,15 @@
+require("dotenv").config();
 const events = require("../models/events");
 const Users = require("../models/users");
+const nodemailer = require("nodemailer")
 
+
+const transport = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: { user: process.env.EMAIL, pass: process.env.EMAIL_PASSWORD },
+});
 // creating an event-
 const createEvent = async (req, res) => {
   try {
@@ -222,6 +231,100 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+//Event Booked API//
+const booknow = async(req,res)=>{
+  const {eventId} = req.params
+  const {username,useremail,number,ticket} = req.body
+  try {
+    const event = await events.findById(eventId)
+    if(!event){
+      return res.status(404).json({
+        success:false,
+        message:"Event not found"
+      })
+    }
+    const info = {
+      from: process.env.EMAIL,
+      to: useremail,
+      subject: "Hurray Event Booked Successfully",
+      html:`<!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Booking Confirmation</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          padding: 20px;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #fff;
+          padding: 40px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+          color: #333;
+          text-align: center;
+        }
+        p {
+          color: #555;
+          font-size: 16px;
+          line-height: 1.6;
+          margin-bottom: 20px;
+        }
+        .info {
+          background-color: #f9f9f9;
+          padding: 20px;
+          border-radius: 8px;
+          margin-top: 30px;
+        }
+        .info p {
+          margin: 0;
+        }
+        .footer {
+          text-align: center;
+          margin-top: 30px;
+        }
+      </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Booking Confirmation</h1>
+          <p>Hello <strong>${ username }</strong>,</p>
+          <p>We are pleased to inform you that your booking for the event has been confirmed successfully.</p>
+          <div class="info">
+            <p><strong>Amount of Tickets:</strong>₹ ${ ticket }</p>
+            <p><strong>Contact Number:</strong> ${ number }</p>
+          </div>
+          <p>Thank you for choosing our event. We look forward to seeing you there!</p>
+          <div class="footer">
+            <p>Best regards,<br>Event Management Team</p>
+          </div>
+        </div>
+      </body>
+      </html>
+      `,
+    };
+
+
+    await transport.sendMail(info);
+
+    res.status(201).json({
+      success: true,
+      message: "Booked",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: true,
+      message: error.message,
+    });
+  }
+}
 module.exports = {
   createEvent,
   userInfo,
@@ -230,4 +333,5 @@ module.exports = {
   deleteEvent,
   userEvents,
   getSingleEvent,
+  booknow
 };

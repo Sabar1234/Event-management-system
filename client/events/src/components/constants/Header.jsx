@@ -2,7 +2,7 @@ import React from "react";
 import { grayBg } from "../colors/colors";
 import { useNavigate } from "react-router";
 
-const Header = () => {
+const Header = ({ filterEvents }) => {
   const navigate = useNavigate();
   const userLogin = JSON.parse(localStorage.getItem("userLogin"));
   const userName = userLogin?.name;
@@ -28,11 +28,54 @@ const Header = () => {
     >
       <div className="container mx-auto md:flex py-3 hidden p-8 flex-wrap items-center justify-between">
         <div className="left flex flex-wrap items-center justify-center">
-          <p className="cursor-pointer mx-2 text-sm font-normal">Comedy</p>
-          <p className="cursor-pointer mx-2 text-sm font-normal">Music</p>
-          <p className="cursor-pointer mx-2 text-sm font-normal">Kids</p>
-          <p className="cursor-pointer mx-2 text-sm font-normal">Workshops</p>
-          <p className="cursor-pointer mx-2 text-sm font-normal">Activities</p>
+          <p
+            className="cursor-pointer mx-2 text-sm font-normal"
+            onClick={() => {
+              filterEvents("all");
+            }}
+          >
+            All
+          </p>
+          <p
+            className="cursor-pointer mx-2 text-sm font-normal"
+            onClick={() => {
+              filterEvents("Comedy shows");
+            }}
+          >
+            Comedy
+          </p>
+          <p
+            className="cursor-pointer mx-2 text-sm font-normal"
+            onClick={() => {
+              filterEvents("Music shows");
+            }}
+          >
+            Music
+          </p>
+          <p
+            className="cursor-pointer mx-2 text-sm font-normal"
+            onClick={() => {
+              filterEvents("Kids");
+            }}
+          >
+            Kids
+          </p>
+          <p
+            className="cursor-pointer mx-2 text-sm font-normal"
+            onClick={() => {
+              filterEvents("Workshops");
+            }}
+          >
+            Workshops
+          </p>
+          <p
+            className="cursor-pointer mx-2 text-sm font-normal"
+            onClick={() => {
+              filterEvents("Activities");
+            }}
+          >
+            Activities
+          </p>
         </div>
 
         <div className="right flex flex-wrap items-center justify-center">
@@ -49,7 +92,6 @@ const Header = () => {
             ListedEvents
           </p>
           <p className="cursor-pointer mx-2 text-sm font-normal">Offers</p>
-          <p className="cursor-pointer mx-2 text-sm font-normal">GiftCards</p>
         </div>
       </div>
     </div>

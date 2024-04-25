@@ -1,8 +1,8 @@
+require("dotenv").config();
 const Admin = require("../models/adminModal");
 const events = require("../models/events");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 //sign-up
 const adminSignup = async (req, res) => {
@@ -25,6 +25,8 @@ const adminSignup = async (req, res) => {
     await newAdmin.save();
     res.status(201).json({
       message: "Admin created successfully",
+      admin: newAdmin,
+      success:true
     });
   } catch (error) {
     res.status(500).json({
@@ -82,15 +84,15 @@ const adminLogin = async (req, res) => {
 //Admin logOut//
 const logOut = async (req, res) => {
   try {
-    const { adminToken } = req.cookies;
-    if (!adminToken) {
+    const { AdminToken } = req.cookies;
+    if (!AdminToken) {
       return res.status(400).json({
         success: false,
         message: "You are not logged in!",
       });
     }
 
-    const decoded = await jwt.verify(adminToken, process.env.SECRET_KEY);
+    const decoded = await jwt.verify(AdminToken, process.env.SECRET_KEY);
 
     if (decoded) {
       const admin = await Admin.findById(decoded._id);
@@ -165,10 +167,44 @@ const statusCancel = async (req, res) => {
   }
 };
 
+//Check Auth
+const CheckAuth = async (req, res) => {
+  try {
+    const { AdminToken } = req.cookies;
+    // console.log(AdminToken);
+
+    if (!AdminToken) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Unauthorized Access!" });
+    }
+
+    const decoded = await jwt.verify(AdminToken, process.env.SECRET_KEY);
+
+    if (decoded) {
+      const admin = await Admin.findById(decoded._id);
+
+      if (!admin) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Admin not found!" });
+      }
+
+      res.json({ success: true, admin: admin });
+    } else {
+      res.status(403).json({ success: false, message: "Invalid token!" });
+    }
+  } catch (error) {
+    console.error("Error in authentication:", error);
+    res.status(500).json({ success: false, message: "Internal server error!" });
+  }
+};
+
 module.exports = {
   adminSignup,
   adminLogin,
   statusApprove,
   statusCancel,
   logOut,
+  CheckAuth,
 };

@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteEvent, fetchUserEvents } from "../../redux/actions/events";
-import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import { Toaster, toast } from "sonner";
+import { deleteEvent, fetchUserEvents } from "../../redux/actions/events";
 
 const ListedEvents = () => {
   const loggedInUser = JSON.parse(localStorage.getItem("userLogin"));
@@ -42,6 +41,8 @@ const ListedEvents = () => {
     dispatch(deleteEvent(eventId, userId));
     toast.success("Event deleted successfully");
   };
+
+  
 
   return (
     <div>

@@ -1,65 +1,45 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchAllEvents } from "../../redux/actions/events";
+import React from "react";
+import moment from "moment";
 
-const FilteredEvents = () => {
-  const events = useSelector((state) => state.events.events);
-  console.log("Inside searched events", events);
-  const [filteredEvents, setFilteredEvents] = useState(events);
-  const dispatch = useDispatch();
-
-  const filterEvents = (category) => {
-    if (category === "all") {
-      setFilteredEvents(events);
-    } else {
-      setFilteredEvents(
-        events.filter((event) => event.category.includes(category))
-      );
-    }
-  };
-  useEffect(() => {
-    dispatch(fetchAllEvents());
-  }, [dispatch]);
-  //
-  useEffect(() => {
-    filterEvents("all");
-  }, [events]);
-
+const FilteredEvents = ({ filteredEvents }) => {
   return (
-    <div>
-      <div className="flex gap-5">
-        <button onClick={() => filterEvents("all")}>All</button>
-        <button onClick={() => filterEvents("Music")}>Music</button>
-        <button onClick={() => filterEvents("Comedy")}>Comedy</button>
-        <button onClick={() => filterEvents("Workshops")}>Workshops</button>
-        <button onClick={() => filterEvents("Activities")}>Activities</button>
-        <button onClick={() => filterEvents("Kids")}>Kids</button>
-      </div>
-      <hr />
-      {filteredEvents.map((event) => {
-        return (
-          <>
-            <div className="my-4">
-              <p>{event.title}</p>
-              <div className="flex gap-3">
-                <p>
-                  Start:{" "}
-                  <span className="underline font-medium">
-                    {event.startDate}
-                  </span>
-                </p>
-                <p>
-                  End:{" "}
-                  <span className="underline font-medium">{event.endDate}</span>
-                </p>
-              </div>
-              <div>
-                <p className="text-red-700">{event.category}</p>
-              </div>
-            </div>
-          </>
-        );
-      })}
+    <div className="flex flex-wrap gap-5 mt-10">
+        {filteredEvents.map((e) => {
+                return (
+                  <>
+                    {e.status === "APPROVED" ? (
+                      <>
+                        <div className="cursor-pointer parent mt-6">
+                          <div className="rounded-xl max-w-52 overflow-hidden ">
+                            <div className="flex flex-col">
+                              <div
+                                className="img "
+                                onClick={() => handleClick(e._id)}
+                              >
+                                <img
+                                  className="h-80 w-full object-cover rounded-xl"
+                                  src={e.image}
+                                  alt=""
+                                />
+                              </div>
+                              <div className="content p-3">
+                                <div>
+                                  <p className="text-xl font-bold">{e.title}</p>
+                                  <p className="text-gray-500 font-medium ">
+                                    {e.category}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>{null}</>
+                    )}
+                  </>
+                );
+              })}
     </div>
   );
 };

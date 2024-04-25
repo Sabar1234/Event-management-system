@@ -2,7 +2,7 @@ const express = require("express");
 const connectDb = require("./db/db");
 require("dotenv").config();
 const app = express();
-const cookieParder = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/userRoutes");
 const eventsRoutes = require("./routes/events");
 const adminRoutes = require("./routes/admin");
@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-app.use(cookieParder());
+app.use(cookieParser());
 app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/events", eventsRoutes);

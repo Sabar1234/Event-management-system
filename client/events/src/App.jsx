@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Otp from "./components/Auth/Otp";
 import Signup from "./components/Auth/Signup";
@@ -17,7 +17,8 @@ import AllEvents from "./components/Pages/AdminPages/AllEvents";
 import Requests from "./components/Pages/AdminPages/Requests";
 import Error from "./components/Pages/404Page";
 import AdminNav from "./components/constants/AdminNav";
-import Footer from "./components/constants/Footer";
+import AdminSignup from "./components/Auth/AdminSignup";
+import AdminLogin from "./components/Auth/AdminLogin";
 
 const App = () => {
   return (
@@ -35,13 +36,18 @@ const App = () => {
         <Route path="/search-events" element={<SearchedEvents />} />
         <Route path="/event/:eventId" element={<SingleEventPage />} />
         <Route path="/edit-event/:eventId" element={<EditEvent />} />
+        {/* admin routes */}
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/all-events" element={<AllEvents />} />
         <Route path="/admin/requests" element={<Requests />} />
         <Route path="/admin/all-users" element={<AllUser />} />
         <Route path="/admin-nav" element={<AdminNav />} />
+        <Route path="/admin/*" element={<Navigate to="/error" />} />
+        <Route path="/admin-signup" element={<AdminSignup />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/error" element={<Error />} />
+        {/* error */}
         <Route path="/*" element={<Error />} />
-        {/* <Route path="/footer" element={<Footer />} /> */}
       </Routes>
     </BrowserRouter>
   );
